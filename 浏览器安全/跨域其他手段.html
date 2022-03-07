@@ -1,0 +1,184 @@
+// 1、POSTMessage
+// 页面和其打开的新窗口的数据传递
+// 多窗口之间消息传递
+// 页面与嵌套的iframe消息传递
+// 上面三个场景的跨域数据传递
+
+// a.html
+<iframe src="http://localhost:4000/b.html" frameborder="0" id="frame" onload="load()"></iframe> //等它加载完触发一个事件
+//内嵌在http://localhost:3000/a.html
+  <script>
+    function load() {
+      let frame = document.getElementById('frame')
+      frame.contentWindow.postMessage('我爱你', 'http://localhost:4000') //发送数据
+      window.onmessage = function(e) { //接受返回数据
+        console.log(e.data) //我不爱你
+      }
+    }
+  </script>
+
+  // b.html
+  window.onmessage = function(e) {
+    console.log(e.data) //我爱你
+    e.source.postMessage('我不爱你', e.origin)
+ }
+
+ <!-- 2.websocket -->
+
+<!-- WebSocket 是一种双向通信协议，在建立连接之后，WebSocket 的 server 与 client 都能主动向对方发送或接收数据。 -->
+// socket.html
+
+<script>
+    let socket = new WebSocket('ws://localhost:3000');
+    socket.onopen = function () {
+      socket.send('我爱你');//向服务器发送数据
+    }
+    socket.onmessage = function (e) {
+      console.log(e.data);//接收服务器返回的数据
+    }
+</script>
+
+// server.js
+let express = require('express');
+let app = express();
+let WebSocket = require('ws');//记得安装ws
+let wss = new WebSocket.Server({port:3000});
+wss.on('connection',function(ws) {
+  ws.on('message', function (data) {
+    console.log(data);
+    ws.send('我不爱你')
+  });
+})
+
+
+
+<!-- Node中间件代理（两次跨域） -->
+<!-- 代理服务器突破跨域 -->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script>
+  $.ajax({
+    url: 'http://localhost:3000',
+    type: 'post',
+    data: { name: 'xiamen', password: '123456' },
+    contentType: 'application/json;charset=utf-8',
+    success: function(result) {
+      console.log(result) // {"title":"fontend","password":"123456"}
+    },
+    error: function(msg) {
+      console.log(msg)
+    }
+  })
+ </script>
+
+
+ // server1.js 代理服务器(http://localhost:3000)
+const http = require('http')
+// 第一步：接受客户端请求
+const server = http.createServer((request, response) => {
+  // 代理服务器，直接和浏览器直接交互，需要设置CORS 的首部字段
+  response.writeHead(200, {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': '*',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  })
+  // 第二步：将请求转发给服务器
+  const proxyRequest = http
+    .request(
+      {
+        host: '127.0.0.1',
+        port: 4000,
+        url: '/',
+        method: request.method,
+        headers: request.headers
+      },
+      serverResponse => {
+        // 第三步：收到服务器的响应
+        var body = ''
+        serverResponse.on('data', chunk => {
+          body += chunk
+        })
+        serverResponse.on('end', () => {
+          console.log('The data is ' + body)
+          // 第四步：将响应结果转发给浏览器
+          response.end(body)
+        })
+      }
+    )
+    .end()
+})
+server.listen(3000, () => {
+  console.log('The proxyServer is running at http://localhost:3000')
+})
+
+
+
+const http = require('http')
+const data = { title: 'fontend', password: '123456' }
+const server = http.createServer((request, response) => {
+  if (request.url === '/') {
+    response.end(JSON.stringify(data))
+  }
+})
+server.listen(4000, () => {
+  console.log('The server is running at http://localhost:4000')
+})
+
+
+
+<!-- nginx 反向代理 -->
+
+server {
+  listen       81;
+  server_name  www.domain1.com;
+  location / {
+      proxy_pass   http://www.domain2.com:8080;  #反向代理
+      proxy_cookie_domain www.domain2.com www.domain1.com; #修改cookie里域名
+      index  index.html index.htm;
+
+      # 当用webpack-dev-server等中间件代理接口访问nignx时，此时无浏览器参与，故没有同源限制，下面的跨域配置可不启用
+      add_header Access-Control-Allow-Origin http://www.domain1.com;  #当前端只跨域不带cookie时，可为*
+      add_header Access-Control-Allow-Credentials true;
+  }
+}
+
+
+
+
+
+
+
+CORS支持所有类型的HTTP请求，是跨域HTTP请求的根本解决方案
+JSONP只支持GET请求，JSONP的优势在于支持老式浏览器，以及可以向不支持CORS的网站请求数据。
+不管是Node中间件代理还是nginx反向代理，主要是通过同源策略对服务器不加限制。
+日常工作中，用得比较多的跨域方案是cors和nginx反向代理
+
+<!-- document.domain + iframe -->
+
+
+该方式只能用于二级域名相同的情况下，比如 a.test.com 和 b.test.com 适用于该方式。
+只需要给页面添加 document.domain ='test.com' 表示二级域名都相同就可以实现跨域。
+实现原理：两个页面都通过js强制设置document.domain为基础主域，就实现了同域。
+
+
+
+// a.html
+<body>
+ helloa
+  <iframe src="http://b.zf1.cn:3000/b.html" frameborder="0" onload="load()" id="frame"></iframe>
+  <script>
+    document.domain = 'zf1.cn'
+    function load() {
+      console.log(frame.contentWindow.a);
+    }
+  </script>
+</body>
+
+
+// b.html
+<body>
+   hellob
+   <script>
+     document.domain = 'zf1.cn'
+     var a = 100;
+   </script>
+</body>

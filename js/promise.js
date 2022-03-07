@@ -8,3 +8,26 @@ Promise 的 .then 或者 .catch 可以被调用多次, 但如果Promise内部的
 .then 或者 .catch 的参数期望是函数，传入非函数则会发生值透传。(见3.8)
 .then方法是能接收两个参数的，第一个是处理成功的函数，第二个是处理失败的函数，再某些时候你可以认为catch是.then第二个参数的简便写法。(见3.9)
 .finally方法也是返回一个Promise，他在Promise结束的时候，无论结果为resolved还是rejected，都会执行里面的回调函数。 */
+
+
+// 死循环
+const promise = Promise.resolve().then(() => {
+    return promise;
+  })
+  promise.catch(console.err)
+
+
+
+// 值透传
+Promise.resolve(1)
+  .then(2)
+  .then(Promise.resolve(3))
+  .then(console.log) //1
+
+
+//   我们知道如果直接在脚本文件中定义一个Promise，它构造函数的第一个参数是会立即执行的，就像这样：
+
+
+
+
+  
