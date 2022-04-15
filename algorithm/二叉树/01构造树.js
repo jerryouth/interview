@@ -35,19 +35,19 @@ let root2 = createBinaryTree(arr2)
 //     let result =  searchBST(root.left) || searchBST(root.right)
 //     return result ? result : null
 // };
-var getMinimumDifference = function(root) {
-    let minNum = Infinity
-    const help = function(root) {
-        if (!root) return null
-        if (root.left) minNum = Math.min(Math.abs(root.val - root.left.val), minNum)
-        if (root.right) minNum = Math.min(Math.abs(root.val - root.right.val), minNum)
-        help(root.left)
-        help(root.right)
-    }
-    help(root)
-    return  minNum
-};
-let a = getMinimumDifference(tree)
+// var getMinimumDifference = function(root) {
+//     let minNum = Infinity
+//     const help = function(root) {
+//         if (!root) return null
+//         if (root.left) minNum = Math.min(Math.abs(root.val - root.left.val), minNum)
+//         if (root.right) minNum = Math.min(Math.abs(root.val - root.right.val), minNum)
+//         help(root.left)
+//         help(root.right)
+//     }
+//     help(root)
+//     return  minNum
+// };
+// let a = getMinimumDifference(tree)
 
 
 
@@ -89,3 +89,22 @@ let a = getMinimumDifference(tree)
 
 
 
+
+
+let result = []
+let path = []
+var combine = function(n, k) {
+    combineHelper(n, k, 1)
+    return result
+};
+const combineHelper = (n, k, startIndex) => {
+    
+    if (path.length == k)  result.push(path.slice())
+    for (let i =startIndex; i <= n; i++) {
+        path.push(i)
+        combineHelper(n, k, i + 1)
+        path.pop()  
+    }
+
+}
+combine(1, 1)

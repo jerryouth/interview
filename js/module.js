@@ -27,6 +27,10 @@ mod.incCounter()
 consolel.log(mod.counter) //3
 
 
+
+
+
+
 // lib.js
 
 export let counter = 3

@@ -31,3 +31,62 @@ class EventEmitter {
         }
     }
 }
+
+class EventEmitter {
+    constructor() {
+        this._event = {
+        }
+    }
+    on(name, fn) {
+        const callbacks = this._event[name] || []
+        callbacks.push(fn)
+        this._event[name] = callbacks
+    }
+    emit(name,once=false, ...args) {
+        let tasks = this._event[name].slice()
+        for (let fn of tasks) {
+            fn(...args)
+        }
+        if (once) delete this._event[name]
+    }
+    off(name, callback) {
+        const callbacks = this._event[name] || []
+        const newCallbacks = callback.filter(fn => fn != callback)
+        this._events[name] = newCallbacks
+    }
+}
+
+
+// class Emitter {
+//     // 用来存放注册的时间与回调
+//     constructor() {
+//         this._event = {}
+//     }
+//     on(eventName ,cb) {
+//         if (this._events[eventName]) {
+//             if (this.eventName !== "newListener") {
+//                 this.emit("newListener", eventName)
+//             }
+//         }
+//         const callbacks = this._event[eventName] || []
+//         callbacks.push(cb)
+//         this._event[eventName] = callbacks
+//     }
+//     emit(eventName, ...args) {
+//         const callbacks = this._events[eventName] || []
+//         callbacks.forEach(cb => cb(...args))
+//     }
+//     off(eventName, callback) {
+//         const callbacks = this._event[eventName] || []
+//         const newCallbacks = callbacks.filter(fn => fn != callback && fn.initialCallback != callback)
+//         this._events[eventName] = newCallbacks
+//     }
+//     once(eventName, callback) {
+//         const one = (...args) => {
+//             callback(...args)
+//             this.off(eventName, one)
+//             one.initialCallback = callback
+//             this.on(eventName, one)
+//         }
+//     }
+// }

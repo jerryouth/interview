@@ -14,19 +14,49 @@
 // ; #
 
 
+// var reverseLeftWords = function(s, n) {
+//     let arr = []
+//     remain_arr = s.substring(n, s.length)
+//     let k = n - 1
+//     while(k >= 0) {
+//         arr.push(s[k])
+//         k--
+//     }
+//     for (let i = 0; i<arr.length; i++) {
+//         remain_arr += arr[i]
+//     }
+//     return remain_arr
+// };
+
+
+
+// var reverseLeftWords = function(s, n) {
+//     let s_arr = [...s].concat(new Array(n).fill(" "))
+//     let left = 0, right = s_arr.length - 1, count = 0, tmp = ''
+//     while(count <= n) {
+//         tmp = s_arr[left]
+//         s_arr[left] = s_arr[right]
+//         s_arr[right] = tmp
+//         left++
+//         right--
+//         count++
+//     }
+//     return s_arr.slice(n).join("")
+
+// }
+
 var reverseLeftWords = function(s, n) {
-    let arr = []
-    remain_arr = s.substring(n, s.length)
-    let k = n - 1
-    while(k >= 0) {
-        arr.push(s[k])
-        k--
+    let s_arr = [...s].concat(new Array(n).fill(" "))
+    let left = 0, right = left + s_arr.length - n, count = 0, tmp = ''
+    while(count < n) {
+        tmp = s_arr[left]
+        s_arr[left] = s_arr[right]
+        s_arr[right] = tmp
+        left++
+        right++
+        count++
     }
-    for (let i = 0; i<arr.length; i++) {
-        remain_arr += arr[i]
-    }
-    return remain_arr
-};
+    return s_arr.slice(n).join("")
 
-
+}
 reverseLeftWords('abcdefg', 2)

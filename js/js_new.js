@@ -20,6 +20,9 @@ function objectFactory() {
 
 
 
+
+
+
 function objectFactory() {
     let obj = new Object()
     let Constructor = [].shift.call(arguments)
@@ -27,5 +30,25 @@ function objectFactory() {
     let ret = Constructor.apply(obj, arguments)
     return ret
 }
+
+
+
+function objectFactory() {
+    let obj = new Object()
+    let Constructor = [].shift.call(arguments)
+    obj.__proto__ = Constructor.prototype
+    let ret = Constructor.apply(obj, arguments)
+    return ret
+}
+
+function objectFactory() {
+    let object = new Object
+    let constructor = [].shift.call(arguments)
+    obj.__proto__ = Constructor.prototype
+    let ret = Constructor.apply(obj, arguments)
+    return ret
+}
+
+
 
 

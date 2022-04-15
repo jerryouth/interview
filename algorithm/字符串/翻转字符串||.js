@@ -12,12 +12,27 @@
 // #
 
 
+// var reverseStr = function(s, k) {
+//     const len = s.length;
+//     let resArr = s.split(""); 
+//     for(let i = 0; i < len; i += 2 * k) {
+//         let l = i - 1, r = i + k > len ? len : i + k;
+//         while(++l < --r) [resArr[l], resArr[r]] = [resArr[r], resArr[l]];
+//     }
+//     return resArr.join("");
+// };
+
+const until = function(path, k) {
+    return path.slice(0, k).reverse().concat(path.slice(k))
+}
 var reverseStr = function(s, k) {
-    const len = s.length;
-    let resArr = s.split(""); 
-    for(let i = 0; i < len; i += 2 * k) {
-        let l = i - 1, r = i + k > len ? len : i + k;
-        while(++l < --r) [resArr[l], resArr[r]] = [resArr[r], resArr[l]];
+    str_arr = [...s]
+    let count = 0
+    let result = []
+    while(count < str_arr.length) {
+        result.push(...until(str_arr.slice(count, count+ 2 * k), k))
+        count += 2 * k
     }
-    return resArr.join("");
+    
+    return result.join("")
 };

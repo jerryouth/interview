@@ -36,3 +36,9 @@ const dc = function(obj) {
     }
     return t
 }
+
+
+function shallowCopy(obj) {
+    let copy = {}
+    for (key in obj)
+}

@@ -15,7 +15,7 @@
 - **align-items**(**flex-start | flex-end |center |strech | baseline**) 交叉轴方向元素调整
 - **justify-content**(**flex-start| flex-end flex |space-around |space-between| center**)  主轴方向调整
 - **align-content**(**flex-start | flex-end |space-around | space-between | strech | center**) 多根轴线的对齐方式
-- **flex-flow** 分别是direction flex
+- **flex-flow** 分别是direction | wrap
 
 
 ## 元素api

@@ -37,4 +37,26 @@ var reverseWords = function(s) {
 
 
 
+var reverseWords = function(s) {
+    let index = 0; 
+    const s_arr = [...s]
+    let tmp = ""
+    const result = []
+    while(index < s.length) {
+        if(s_arr[index] !== " ") {
+            tmp += s_arr[index]
+        }
+        else {
+            if (tmp) {
+                result.unshift(tmp)
+                tmp = ''
+            }
+        }
+        index++
+    }
+    if (tmp) result.unshift(tmp)
+    return result.join(" ")
+};
+
+
 
